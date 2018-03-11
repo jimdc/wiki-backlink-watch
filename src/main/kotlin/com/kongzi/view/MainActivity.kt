@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.PreferenceManager
 import android.util.Log
 import android.view.Menu
-import android.view.MenuItem
 import android.widget.TextView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -21,7 +20,7 @@ import android.view.View
 import com.kongzi.model.*
 import org.intellij.lang.annotations.Language
 import android.databinding.adapters.TextViewBindingAdapter.setText
-
+import android.view.MenuItem
 
 
 class MainActivity : AppCompatActivity() {
@@ -52,12 +51,6 @@ class MainActivity : AppCompatActivity() {
             setupViews()
         }
 
-        val sharedPref = PreferenceManager.getDefaultSharedPreferences(this.applicationContext)
-        val articlePref = sharedPref.getString(this.applicationContext.resources.getString
-            (R.string.article_key), "Barack Obama")
-        var focusTextPref = findViewById<TextView>(R.id.articlefocus)
-        focusTextPref.setText(articlePref.toString())
-
         val toolbar = findViewById(R.id.cooltoolbar) as? android.support.v7.widget.Toolbar
         setSupportActionBar(toolbar)
     }
@@ -85,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setBacklinks))
 
-        mCompositeDisposable.add(mViewModel.getCuoArticles()
+        mCompositeDisposable.add(mViewModel.getCuoArticles(this.applicationContext)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setArticles))

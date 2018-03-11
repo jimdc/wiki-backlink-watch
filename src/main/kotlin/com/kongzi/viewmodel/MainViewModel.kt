@@ -1,5 +1,6 @@
 package com.kongzi.viewmodel
 
+import android.content.Context
 import com.kongzi.model.Article
 import com.kongzi.model.Backlink
 import com.kongzi.model.IDataModel
@@ -27,8 +28,8 @@ public class MainViewModel {
                 .flatMap(mDataModel::getBacklinks)
     }
 
-    fun getCuoArticles(): Observable<List<Article>> {
-        return mDataModel.getCuoArticles()
+    fun getCuoArticles(context: Context): Observable<List<Article>> {
+        return mDataModel.getCuoArticles(context)
     }
 
     fun articleSelected(article: Article) {

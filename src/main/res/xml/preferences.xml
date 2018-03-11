@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <android.support.v7.preference.PreferenceCategory
-        android:title="Article to edit">
-        <android.support.v7.preference.EditTextPreference
-            android:key="@string/article_key"
-            android:title="Article focus"
-            android:summary="Fo Fo Cus"
-            android:dialogMessage="Edit it"
-            android:defaultValue="Hillary Clinton" />
+        android:title="@string/articlepref_title">
+        <android.support.v7.preference.ListPreference
+            android:key="@string/articlelist_key"
+            android:title="@string/articlelist_title"
+            android:summary="@string/articlelist_summary"
+            android:entries="@array/articlelist_array"
+            android:entryValues="@array/articlelist_array_values"
+            android:defaultValue="Barack Obama"/>
     </android.support.v7.preference.PreferenceCategory>
 </PreferenceScreen>
