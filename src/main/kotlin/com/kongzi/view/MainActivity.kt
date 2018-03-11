@@ -11,34 +11,52 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
-import com.kongzi.viewmodel.BacklinkViewModel
-import com.kongzi.model.Backlink
-import com.kongzi.model.BacklinkModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import android.widget.Spinner
+import com.kongzi.viewmodel.MainViewModel
+import android.widget.AdapterView
+import android.view.View
+import com.kongzi.model.*
+import org.intellij.lang.annotations.Language
+import android.databinding.adapters.TextViewBindingAdapter.setText
 
-var disposable: Disposable? = null
+
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var editTextPref: EditText
+    private lateinit var mCompositeDisposable: CompositeDisposable
+    private var mDataModel: IDataModel = DataModel()
+    private var mViewModel: MainViewModel = MainViewModel(getDataModel(), SchedulerProvider)
+
+    private var mArticlesSpinner: Spinner? = null
+    private var mArticleSpinnerAdapter:ArticleSpinnerAdapter? = null
+
     lateinit var fragment: RecyclerViewFragment
     val adapter: BacklinkAdapter by lazy { fragment.mAdapter }
+
+    fun getDataModel(): IDataModel {
+        return mDataModel
+    }
+
+    fun getViewModel(): MainViewModel {
+        return MainViewModel(getDataModel(), SchedulerProvider)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-        mViewModel = BacklinkViewModel(BacklinkModel())
-        if (savedInstanceState == null) { setupViews() }
+        if (savedInstanceState == null) {
+            setupViews()
+        }
 
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(this.applicationContext)
         val articlePref = sharedPref.getString(this.applicationContext.resources.getString
             (R.string.article_key), "Barack Obama")
-
-        var editTextPref = findViewById<TextView>(R.id.articlefocus)
-        editTextPref.setText(articlePref.toString())
+        var focusTextPref = findViewById<TextView>(R.id.articlefocus)
+        focusTextPref.setText(articlePref.toString())
 
         val toolbar = findViewById(R.id.cooltoolbar) as? android.support.v7.widget.Toolbar
         setSupportActionBar(toolbar)
@@ -59,28 +77,31 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private var mCompositeSubscription: CompositeDisposable? = null
-    private var mViewModel: BacklinkViewModel? = null
-
     fun bind() {
-        mCompositeSubscription = CompositeDisposable()
+        mCompositeDisposable = CompositeDisposable()
 
-        val mSubscription = mViewModel?.getBacklinks()
-                ?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe (
-                        { result -> setGreeting(result) },
-                        { error -> Log.d("Henlo", error.toString()) } )
+        mCompositeDisposable.add(mViewModel.getBacklinks()
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setBacklinks))
 
-        if (mSubscription != null) mCompositeSubscription?.add(mSubscription)
+        mCompositeDisposable.add(mViewModel.getCuoArticles()
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setArticles))
     }
 
-    private fun setGreeting(greeting: Backlink) {
-        Log.d("Hello", "I changed " + greeting.title + " to 'It has changed!'")
-        greeting.title = "It has changed!"
+    private fun setBacklinks(backlink: Backlink) {
+        Log.i("MainActivity", "backlink #${backlink.pageid}: ${backlink.title}")
+    }
+
+    private fun setArticles(articles: List<Article>) {
+        mArticleSpinnerAdapter = ArticleSpinnerAdapter(this, R.layout.article_item, articles)
+        mArticlesSpinner?.setAdapter(mArticleSpinnerAdapter)
     }
 
     fun unbind() {
-        mCompositeSubscription?.clear()
+        mCompositeDisposable.clear()
     }
 
     private fun setupViews() {
@@ -88,6 +109,24 @@ class MainActivity : AppCompatActivity() {
         fragment = RecyclerViewFragment()
         transaction.replace(R.id.backlink_content_fragment, fragment)
         transaction.commit()
+
+        mArticlesSpinner = findViewById(R.id.articles) as Spinner
+        mArticlesSpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View,
+                                        position: Int, id: Long) {
+                itemSelected(position)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                //nothing to do here
+            }
+        }
+    }
+
+    private fun itemSelected(position: Int) {
+        val articleSelected = mArticleSpinnerAdapter?.getItem(position)
+        if (articleSelected != null)
+            mViewModel.articleSelected(articleSelected)
     }
 
     override fun onResume() {
@@ -96,22 +135,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
-        unbind()
         super.onPause()
+        unbind()
     }
-
-    /*
-    fun getProductData() {
-        disposable = wikiApiServe.backlinks(bltitle = "Donald Trump")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { result ->
-                            result.query.backlinks.forEach {
-                                //mDataset.add(it)
-                            }
-                        },
-                        { error -> Log.d("RecyclerViewFragment", error.toString()) }
-                )
-    }*/
 }

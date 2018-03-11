@@ -1,6 +1,6 @@
 package com.kongzi.view
 
-import android.content.ContentValues.TAG
+import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.RecyclerView
@@ -8,15 +8,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import android.support.v7.widget.LinearLayoutManager
 import com.kongzi.R
 import com.kongzi.model.Backlink
-import com.kongzi.viewmodel.BacklinkViewModel
-import com.kongzi.wikiApiServe
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import android.arch.lifecycle.ViewModelProviders
+
 
 public class RecyclerViewFragment : Fragment() {
     var mDataset: MutableList<Backlink> = ArrayList()

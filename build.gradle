@@ -58,20 +58,20 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:support-v4:26.1.0"
-    compile "com.android.support:appcompat-v7:26.1.0"
-    compile "com.android.support:support-annotations:23.1.1"
-    compile "com.android.support:recyclerview-v7:26.1.0"
-    compile "com.android.support:preference-v7:26.1.0"
+    compile 'com.android.support:design:26.1.0'
     compile 'com.android.support:preference-v14:26.1.0'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
 
-    kapt "com.android.databinding:compiler:2.3.3"
+    //LiveData, ViewModel
+    implementation "android.arch.lifecycle:extensions:1.1.0"
+    annotationProcessor "android.arch.lifecycle:compiler:1.1.0"
+    // Test helpers for LiveData
+    testImplementation "android.arch.core:core-testing:1.1.0"
+
+    kapt "com.android.databinding:compiler:3.0.1"
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
-    // Support v4
-    implementation 'com.android.support:support-v4:26.1.0'
 
     // Robolectric
     testImplementation 'junit:junit:4.12'
