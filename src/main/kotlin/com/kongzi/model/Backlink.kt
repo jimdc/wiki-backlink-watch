@@ -5,7 +5,7 @@ import android.databinding.Bindable
 import com.android.databinding.library.baseAdapters.BR
 
 /**
- * Backlink class from [WikiApiService] with DataBinding support
+ * Backlink class from [WikiApiService] with (as-yet, unused) DataBinding support
  */
 
 data class Backlink(

@@ -9,7 +9,10 @@ import retrofit2.http.Query
 
 interface WikiApiService {
 
-    /* https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&srsearch=Trump */
+    /**
+     * Equivalent to https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&srsearch=Trump
+     * Currently, [hitCountCheck] is not in use and there are no plans for usage.
+     */
     @GET("api.php")
     fun hitCountCheck(@Query("action") action: String = "query",
                       @Query("format") format: String = "json",
@@ -17,18 +20,23 @@ interface WikiApiService {
                       @Query("srsearch") srsearch: String):
             Observable<HitModel.Result>
 
-    /* https://en.wikipedia.org/w/api.php?action=query&format=json&list=backlinks
-       &bltitle=China&blnamespace=0&blfilterredir=nonredirects&bllimit=50 */
+    /**
+     * Equivalent to https://en.wikipedia.org/w/api.php?action=query&format=json&list=backlinks&bltitle=China&blnamespace=0&blfilterredir=nonredirects&bllimit=50
+     * Default settings exclude redirects and restrict the namespace to articles only.
+     */
     @GET("api.php")
     fun backlinks(@Query("action") action: String = "query",
                   @Query("format") format: String = "json",
                   @Query("list") list: String = "backlinks",
                   @Query("bltitle") bltitle: String,
-                  @Query("blnamespace") blnamespace: Int = 0, //Articles only
+                  @Query("blnamespace") blnamespace: Int = 0,
                   @Query("blfilterredir") blfilterredir: String = "nonredirects",
                   @Query("bllimit") bllimit: Int = 50):
             Observable<BacklinkModel.Result>
 
+    /**
+     * Hardcoded to use en.wikipedia and SSL for now.
+     */
     companion object {
         fun create(): WikiApiService {
 
@@ -42,43 +50,46 @@ interface WikiApiService {
         }
     }
 
+    /**
+     * [HitModel] would be used to interpret results of [hitCountCheck]
+     * Sample output:
+     *
+     * {
+     *  batchcomplete: "",
+     *   continue: {
+     *    sroffset: 10,
+     *    continue: "-||"
+     *   },
+     *   query: {
+     *    searchinfo: {
+     *     totalhits: 16776
+     *   },
+     *   search: [
+     *   ...
+     */
     object HitModel {
         data class Result(val query: Query)
         data class Query(val searchinfo: SearchInfo)
         data class SearchInfo(val totalhits: Int)
     }
 
-/*
-{
- batchcomplete: "",
- continue: {
-  sroffset: 10,
-  continue: "-||"
- },
- query: {
-  searchinfo: {
-   totalhits: 16776
- },
- search: [...
-*/
-
+    /**
+     * The reason why [Backlink] is not defined here is mostly historical.
+     * Sample output for [BacklinkModel]:
+     *
+     * {"batchcomplete":"",
+     *   "continue": {
+     *   "blcontinue":"0|2175",
+     *  "continue":"-||"
+     *  },
+     *  "query": {
+     *  "backlinks":[
+     *  {"pageid":573,"ns":0,"title":"Alchemy"},
+     *  {"pageid":597,"ns":0,"title":"Austroasiatic languages"},
+     *  ...
+     */
     object BacklinkModel {
         data class Result(val query: Query)
         data class Query(val backlinks: List<Backlink>)
     }
-
-/*
-{"batchcomplete":"",
- "continue": {
-     "blcontinue":"0|2175",
-     "continue":"-||"
-     },
- "query": {
-    "backlinks":[
-       {"pageid":573,"ns":0,"title":"Alchemy"},
-       {"pageid":597,"ns":0,"title":"Austroasiatic languages"},...
-
-*/
-
-
 }

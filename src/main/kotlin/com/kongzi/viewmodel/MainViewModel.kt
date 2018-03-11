@@ -22,7 +22,11 @@ public class MainViewModel {
         mSchedulerProvider = schedulerProvider
     }
 
-    fun getBacklinks(): Observable<Backlink> {
+    /**
+     * Extract titles from articles, to give to [mDataModel.getBacklinks]
+     * @return an observable of type [Backlink]
+     */
+    fun getBacklinks(): Observable<List<Backlink>> {
         return mSelectedArticle.observeOn(mSchedulerProvider.computation())
                 .map(Article::title)
                 .flatMap(mDataModel::getBacklinks)
@@ -32,6 +36,9 @@ public class MainViewModel {
         return mDataModel.getCuoArticles(context)
     }
 
+    /**
+     * Called by the view to update [mSelectedArticle]
+     */
     fun articleSelected(article: Article) {
         mSelectedArticle.onNext(article)
     }

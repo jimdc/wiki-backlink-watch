@@ -26,6 +26,14 @@ public class BacklinkAdapter(var blinks: List<Backlink>) : RecyclerView.Adapter<
         }
     }
 
+    /**
+     * @todo: something more efficient than this.
+     */
+    fun refresh(newitems: List<Backlink>) {
+        blinks = newitems
+        notifyDataSetChanged()
+    }
+
     override fun getItemCount(): Int {
         return blinks.size
     }

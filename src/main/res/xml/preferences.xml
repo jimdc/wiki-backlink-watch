@@ -8,6 +8,6 @@
             android:summary="@string/articlelist_summary"
             android:entries="@array/articlelist_array"
             android:entryValues="@array/articlelist_array_values"
-            android:defaultValue="Barack Obama"/>
+            android:defaultValue="Sigismund Rákóczi"/>
     </android.support.v7.preference.PreferenceCategory>
 </PreferenceScreen>
