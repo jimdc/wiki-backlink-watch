@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <android.support.v7.preference.PreferenceCategory
+        android:title="@string/articlepref_title">
+        <android.support.v7.preference.ListPreference
+            android:key="@string/articlelist_key"
+            android:title="@string/articlelist_title"
+            android:summary="@string/articlelist_summary"
+            android:entries="@array/articlelist_array"
+            android:entryValues="@array/articlelist_array_values"
+            android:defaultValue="Sigismund Rákóczi"/>
+    </android.support.v7.preference.PreferenceCategory>
+</PreferenceScreen>

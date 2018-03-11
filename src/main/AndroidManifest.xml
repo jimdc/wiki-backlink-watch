@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.example">
-    <application android:name="Zhengmingapp">
-        <activity android:name=".activity.ZhengmingActivity" android:screenOrientation="portrait">
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.kongzi">
+    <uses-sdk xmlns:tools="http://schemas.android.com/tools"
+        android:minSdkVersion="18" android:targetSdkVersion="26" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application android:name="Zhengmingapp" android:theme="@style/AppTheme">
+
+        <activity android:name=".view.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+            android:label="WeKorrektor" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".view.SettingsActivity" android:label="Settings"
+            android:parentActivityName=".view.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.MainActivity"/>
+        </activity>
+
     </application>
+
 </manifest>

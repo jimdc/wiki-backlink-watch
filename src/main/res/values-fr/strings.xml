@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="articlepref_title">Préférences d\'Article</string>
+    <string name="articlelist_title">Liste des articles</string>
+    <string name="articlelist_summary">Articles à surveiller</string>
+</resources>

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello_kotlin">Hello, Kotlin!</string>
+    <string name="articlepref_title">Article Preferences</string>
+    <string name="articlelist_title">List of articles</string>
+    <string name="articlelist_summary">Articles to monitor</string>
+
+    <!-- Below this line, not a visible part of the UI -->
+    <string name="articlelist_key">articlelist_key</string>
 </resources>

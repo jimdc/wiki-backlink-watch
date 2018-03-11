@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="articlelist_array">
+        <item>Banana Fish</item>
+        <item>Sigismund Rákóczi</item>
+        <item>Li (surname 李)</item>
+    </string-array>
+    <string-array name="articlelist_array_values">
+        <item>1028119</item>
+        <item>3276701</item>
+        <item>41579001</item>
+    </string-array>
+</resources>
