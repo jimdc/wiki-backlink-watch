@@ -1,7 +1,7 @@
 package com.kongzi.view
 
 import android.support.v7.widget.RecyclerView
-import com.kongzi.model.Backlink
+import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.View

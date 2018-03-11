@@ -9,6 +9,7 @@ import android.util.ArraySet
 import android.util.Log
 import com.kongzi.R
 import com.kongzi.wikiApiServe
+import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
 import io.reactivex.Observable
 import io.reactivex.internal.operators.observable.ObservableCache.from
 import org.intellij.lang.annotations.Language
@@ -20,10 +21,9 @@ class DataModel : IDataModel {
     /**
      * Backlinks for an article are subject to change.
      * @param[ArticleTitle] because searches are done this way in [WikiApiService]
-     * @todo investigate why can't return wikiApiServe.backlinks(bltitle = ArticleTitle).map{ it -> it.query.backlinks }
      */
     override fun getBacklinks(ArticleTitle: String): Observable<List<Backlink>> {
-        return defaultBacklinks(ArticleTitle)
+        return wikiApiServe.backlinks(bltitle = ArticleTitle).map{ it -> it.query.backlinks }
     }
 
     /**

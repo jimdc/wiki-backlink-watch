@@ -10,9 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.support.v7.widget.LinearLayoutManager
 import com.kongzi.R
-import com.kongzi.model.Backlink
 import android.arch.lifecycle.ViewModelProviders
-
+import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
 
 public class RecyclerViewFragment : Fragment() {
     var mDataset: MutableList<Backlink> = ArrayList()

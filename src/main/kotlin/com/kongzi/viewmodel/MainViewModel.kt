@@ -2,7 +2,7 @@ package com.kongzi.viewmodel
 
 import android.content.Context
 import com.kongzi.model.Article
-import com.kongzi.model.Backlink
+import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
 import com.kongzi.model.IDataModel
 import com.kongzi.model.ISchedulerProvider
 import io.reactivex.Observable;
