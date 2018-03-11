@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-
-    <EditText
-        android:id="@+id/pianhao"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/cooltoolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+    <TextView
+        android:id="@+id/articlefocus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -19,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/pianhao"
+        android:layout_below="@+id/articlefocus"
         android:layout_marginTop="5dp"
         android:layout_weight="2" />
 </LinearLayout>
