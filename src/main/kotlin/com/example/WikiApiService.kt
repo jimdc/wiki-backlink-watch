@@ -1,5 +1,6 @@
 package com.example
 
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import io.reactivex.Observable
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
@@ -33,7 +34,7 @@ interface WikiApiService {
         fun create(): WikiApiService {
 
             val retrofit = Retrofit.Builder()
-                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(MoshiConverterFactory.create())
                     .baseUrl("https://en.wikipedia.org/w/")
                     .build()
@@ -64,9 +65,8 @@ interface WikiApiService {
 
     object BacklinkModel {
         data class Result(val query: Query)
-        data class Query(val backlinks: Backlink)
-        data class Backlink(val pageinfo: List<Pageinfo>)
-        data class Pageinfo(val pageid: Int, val ns: Int, val title: String)
+        data class Query(val backlinks: List<Backlink>)
+        data class Backlink(val pageid: Int, val ns: Int, val title: String)
     }
 
 /*
