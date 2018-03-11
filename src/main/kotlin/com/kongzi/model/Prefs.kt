@@ -1,10 +1,10 @@
-package com.example.activity
+package com.kongzi.model
 
 import android.content.Context
 import android.content.SharedPreferences
 
 class Prefs(context: Context) {
-    val PREFS_FILENAME = "com.example.zhengming.prefs"
+    val PREFS_FILENAME = "com.kongzi.zhengming.prefs"
     val PREFD_ARTICLE = "preferred_article"
     var prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, 0)
 

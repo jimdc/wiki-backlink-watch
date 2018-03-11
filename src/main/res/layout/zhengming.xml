@@ -14,9 +14,12 @@
         android:inputType="text"
         android:text="PreferredArticle" />
 
-    <TextView
-        android:id="@+id/text"
+    <FrameLayout
+        android:id="@+id/backlink_content_fragment"
         android:layout_width="match_parent"
-        android:layout_height="29dp"
-        android:text="@string/hello_kotlin" />
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/pianhao"
+        android:layout_marginTop="5dp"
+        android:layout_weight="2" />
 </LinearLayout>

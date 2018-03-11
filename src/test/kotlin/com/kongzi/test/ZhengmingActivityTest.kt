@@ -1,7 +1,7 @@
-package com.example.test
+package com.kongzi.test
 
-import com.example.BuildConfig
-import com.example.activity.ZhengmingActivity
+import com.kongzi.BuildConfig
+import com.kongzi.view.ZhengmingActivity
 
 import org.junit.Test
 import org.junit.runner.RunWith

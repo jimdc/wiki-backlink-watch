@@ -31,7 +31,7 @@ android {
         targetSdkVersion 26
         versionCode 1
         versionName "1.0.0"
-        applicationId "com.example"
+        applicationId "com.kongzi"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -53,6 +53,11 @@ android {
 }
 
 dependencies {
+    compile "com.android.support:support-v4:26.1.0"
+    compile "com.android.support:appcompat-v7:26.1.0"
+    compile "com.android.support:support-annotations:23.1.1"
+    compile "com.android.support:recyclerview-v7:26.1.0"
+
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 

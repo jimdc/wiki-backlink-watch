@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.example">
+          package="com.kongzi">
     <uses-permission android:name="android.permission.INTERNET" />
-    <application android:name="Zhengmingapp">
-        <activity android:name=".activity.ZhengmingActivity" android:screenOrientation="portrait">
+    <application android:name="com.kongzi.Zhengmingapp">
+        <activity android:name="com.kongzi.view.ZhengmingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
