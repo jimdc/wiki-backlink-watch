@@ -8,4 +8,6 @@ Dependencies:
 2. RecyclerView for data display
 3. RXJava2 as glue
 
+![Screenshot](ssmar11.png)
+
 Model–view–viewmodel architecture, documented with Dokka, tests with Robolectric.
