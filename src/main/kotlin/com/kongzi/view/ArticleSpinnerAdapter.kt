@@ -11,6 +11,7 @@ import android.content.Context
 import android.widget.ArrayAdapter
 import com.kongzi.R
 import com.kongzi.model.Article
+import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
 
 class ArticleSpinnerAdapter(context: Context, resource: Int, objects: List<Article>) :ArrayAdapter<Article>(context, resource, objects) {
 

@@ -2,26 +2,23 @@ package com.kongzi.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.EditText
 import com.kongzi.*
 import io.reactivex.disposables.Disposable
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.PreferenceManager
 import android.util.Log
 import android.view.Menu
-import android.widget.TextView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import android.widget.Spinner
 import com.kongzi.viewmodel.MainViewModel
-import android.widget.AdapterView
 import android.view.View
 import com.kongzi.model.*
 import org.intellij.lang.annotations.Language
 import android.databinding.adapters.TextViewBindingAdapter.setText
 import android.view.MenuItem
-
+import android.widget.*
+import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
 
 class MainActivity : AppCompatActivity() {
 

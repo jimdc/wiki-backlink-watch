@@ -91,5 +91,6 @@ interface WikiApiService {
     object BacklinkModel {
         data class Result(val query: Query)
         data class Query(val backlinks: List<Backlink>)
+        data class Backlink(val pageid: Int, val ns: Int, val title: String)
     }
 }
