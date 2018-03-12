@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.kongzi.R
+import com.kongzi.model.WikiNamespace
 
 public class BacklinkAdapter(var blinks: List<Backlink>) : RecyclerView.Adapter<BacklinkAdapter.ViewHolder>() {
 
@@ -38,8 +39,9 @@ public class BacklinkAdapter(var blinks: List<Backlink>) : RecyclerView.Adapter<
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         blinks[position].let {
+            val namespace = WikiNamespace.values().get(it.ns).name
             holder.row1?.text = it.title
-            holder.row2?.text = it.pageid.toString()
+            holder.row2?.text = "Row #${position}: ${namespace} #${it.pageid}"
         }
     }
 

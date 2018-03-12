@@ -4,30 +4,25 @@ import android.content.Context
 import com.kongzi.model.Article
 import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
 import com.kongzi.model.IDataModel
-import com.kongzi.model.ISchedulerProvider
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject
 
 /**
  * View model for the main activity.
  */
-public class MainViewModel {
+public class MainViewModel (var mDataModel: IDataModel) {
 
-    var mDataModel: IDataModel
     var mSelectedArticle: BehaviorSubject<Article> = BehaviorSubject.create()
-    var mSchedulerProvider: ISchedulerProvider
-
-    constructor(dataModel: IDataModel, schedulerProvider: ISchedulerProvider) {
-        mDataModel = dataModel
-        mSchedulerProvider = schedulerProvider
-    }
 
     /**
      * Extract titles from articles, to give to [mDataModel.getBacklinks]
      * @return an observable of type [Backlink]
      */
     fun getBacklinks(): Observable<List<Backlink>> {
-        return mSelectedArticle.observeOn(mSchedulerProvider.computation())
+        return mSelectedArticle.observeOn(Schedulers.computation())
                 .map(Article::title)
                 .flatMap(mDataModel::getBacklinks)
     }

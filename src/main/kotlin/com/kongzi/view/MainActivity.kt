@@ -23,7 +23,7 @@ import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mCompositeDisposable: CompositeDisposable
-    private var mViewModel: MainViewModel = MainViewModel(DataModel(), SchedulerProvider)
+    private var mViewModel: MainViewModel = MainViewModel(DataModel())
 
     private var mArticlesSpinner: Spinner? = null
     private var mArticleSpinnerAdapter:ArticleSpinnerAdapter? = null
