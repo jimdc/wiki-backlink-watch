@@ -3,10 +3,7 @@ package com.kongzi.view
 import android.content.Intent
 import android.os.Bundle
 import com.kongzi.*
-import io.reactivex.disposables.Disposable
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.preference.PreferenceManager
-import android.util.Log
 import android.view.Menu
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -14,37 +11,39 @@ import io.reactivex.schedulers.Schedulers
 import com.kongzi.viewmodel.MainViewModel
 import android.view.View
 import com.kongzi.model.*
-import org.intellij.lang.annotations.Language
-import android.databinding.adapters.TextViewBindingAdapter.setText
 import android.view.MenuItem
-import android.widget.*
 import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
+import android.support.v4.view.ViewPager
+import android.support.design.widget.TabLayout
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : IFragmentToActivity, AppCompatActivity() {
 
     private lateinit var mCompositeDisposable: CompositeDisposable
     private var mViewModel: MainViewModel = MainViewModel(DataModel())
 
-    private var mArticlesSpinner: Spinner? = null
-    private var mArticleSpinnerAdapter:ArticleSpinnerAdapter? = null
-
-    lateinit var fragment: RecyclerViewFragment
-    val adapter: BacklinkAdapter by lazy { fragment.mAdapter }
+    lateinit var tabLayout: TabLayout
+    lateinit var viewPager: ViewPager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-        if (savedInstanceState == null) {
-            setupViews()
-        }
-
+        /*
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
         val articlePref = sharedPref.getString(resources.getString(R.string.articlelist_key), "Banana Fish")
         setSpinText(articlePref)
+        */
 
         val toolbar = findViewById(R.id.cooltoolbar) as? android.support.v7.widget.Toolbar
         setSupportActionBar(toolbar)
+
+        viewPager = findViewById<View>(R.id.viewpager) as ViewPager
+        val adapter = ViewPagerAdapter(supportFragmentManager)
+        viewPager.adapter = adapter
+
+        tabLayout = findViewById<View>(R.id.tabs) as TabLayout
+        tabLayout.setupWithViewPager(viewPager)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -62,6 +61,29 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun setBacklinks(backlinks: List<Backlink>) {
+        val backlinksFrag = fragmentManager.findFragmentById(R.id.backlink_replaced_fragment) as? BacklinksFragment
+        if (backlinksFrag != null) {
+            backlinksFrag.updateBacklinkDisplay(backlinks)
+        }
+    }
+
+    private fun setArticles(articles: List<Article>) {
+        val backlinksFrag = fragmentManager.findFragmentById(R.id.backlink_replaced_fragment) as? BacklinksFragment
+        if (backlinksFrag != null) {
+            backlinksFrag.updateArticlesDisplay(articles)
+        }
+    }
+
+    override fun selectArticle (article: Article) {
+        mViewModel.articleSelected(article)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        bind()
+    }
+
     fun bind() {
         mCompositeDisposable = CompositeDisposable()
 
@@ -76,67 +98,12 @@ class MainActivity : AppCompatActivity() {
                 .subscribe(this::setArticles))
     }
 
-    private fun setBacklinks(backlinks: List<Backlink>) {
-        if (::fragment.isInitialized)
-            adapter.refresh(backlinks)
-    }
-
-    private fun setArticles(articles: List<Article>) {
-        mArticleSpinnerAdapter = ArticleSpinnerAdapter(this, R.layout.article_item, articles)
-        mArticlesSpinner?.setAdapter(mArticleSpinnerAdapter)
-    }
-
-    /**
-     * @todo: Eliminate the race condition here that comes from constantly re-creating the adapter ^^
-     */
-    fun setSpinText(text: String) {
-        if (mArticlesSpinner != null && mArticleSpinnerAdapter != null) {
-            val count = mArticleSpinnerAdapter?.count
-            for (i in 0 until (count ?: 0)) {
-                if (mArticleSpinnerAdapter?.getItem(i).toString().contains(text)) {
-                    mArticlesSpinner?.setSelection(i)
-                }
-            }
-        }
+    override fun onPause() {
+        super.onPause()
+        unbind()
     }
 
     fun unbind() {
         mCompositeDisposable.clear()
-    }
-
-    /**
-     * Setup [mArticlesSpinner] and [RecyclerViewFragment]
-     */
-    private fun setupViews() {
-        fragment = RecyclerViewFragment()
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.backlink_content_fragment, fragment).commit()
-
-        mArticlesSpinner = findViewById(R.id.articles) as Spinner
-        mArticlesSpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                //Nothing to do here, but required to implement
-            }
-
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                itemSelected(position)
-            }
-        }
-    }
-
-    private fun itemSelected(position: Int) {
-        val articleSelected = mArticleSpinnerAdapter?.getItem(position)
-        if (articleSelected != null)
-            mViewModel.articleSelected(articleSelected)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        bind()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        unbind()
     }
 }
