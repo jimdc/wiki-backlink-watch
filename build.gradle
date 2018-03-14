@@ -1,5 +1,6 @@
 buildscript {
     ext.kotlin_version = '1.2.30'
+    ext.anko_version='0.10.4'
 
     repositories {
         jcenter()
@@ -63,6 +64,8 @@ dependencies {
     compile 'com.android.support:design:26.1.0'
     compile 'com.android.support:preference-v14:26.1.0'
     implementation 'com.android.support:appcompat-v7:26.1.0'
+
+    implementation "org.jetbrains.anko:anko-coroutines:$anko_version"
 
     //LiveData, ViewModel
     implementation "android.arch.lifecycle:extensions:1.1.0"

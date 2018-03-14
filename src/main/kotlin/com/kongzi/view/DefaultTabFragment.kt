@@ -19,7 +19,7 @@ class DefaultTabFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.default_frag_tab, container, false)
+        return inflater!!.inflate(R.layout.default_tab_frag, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,6 +34,8 @@ class DefaultTabFragment : Fragment() {
         fun getInstance(position: Int): Fragment {
             when(position) {
                 0 -> { return BacklinksFragment() }
+                1 -> { return WikicodeFragment() }
+                // 2 -> use CheckedTextView for diffs
                 else -> {
                     val bundle = Bundle()
                     bundle.putInt("pos", position)

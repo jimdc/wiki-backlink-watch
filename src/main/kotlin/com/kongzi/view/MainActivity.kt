@@ -2,6 +2,7 @@ package com.kongzi.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Contacts
 import com.kongzi.*
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -15,14 +16,17 @@ import android.view.MenuItem
 import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
 import android.support.v4.view.ViewPager
 import android.support.design.widget.TabLayout
+import android.util.Log
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
 
 class MainActivity : IFragmentToActivity, AppCompatActivity() {
 
     private lateinit var mCompositeDisposable: CompositeDisposable
     private var mViewModel: MainViewModel = MainViewModel(DataModel())
-
-    lateinit var tabLayout: TabLayout
-    lateinit var viewPager: ViewPager
+    private lateinit var mAdapter: ViewPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,12 +41,12 @@ class MainActivity : IFragmentToActivity, AppCompatActivity() {
         val toolbar = findViewById(R.id.cooltoolbar) as? android.support.v7.widget.Toolbar
         setSupportActionBar(toolbar)
 
-        viewPager = findViewById<View>(R.id.viewpager) as ViewPager
-        val adapter = ViewPagerAdapter(supportFragmentManager)
-        viewPager.adapter = adapter
+        val mViewPager = findViewById<View>(R.id.viewpager) as ViewPager
+        mAdapter = ViewPagerAdapter(supportFragmentManager)
+        mViewPager.adapter = mAdapter
 
-        tabLayout = findViewById<View>(R.id.tabs) as TabLayout
-        tabLayout.setupWithViewPager(viewPager)
+        val tabLayout = findViewById<TabLayout>(R.id.tabs)
+        tabLayout.setupWithViewPager(mViewPager)
 
     }
 
@@ -62,21 +66,47 @@ class MainActivity : IFragmentToActivity, AppCompatActivity() {
     }
 
     private fun setBacklinks(backlinks: List<Backlink>) {
-        val backlinksFrag = fragmentManager.findFragmentById(R.id.backlink_replaced_fragment) as? BacklinksFragment
-        if (backlinksFrag != null) {
-            backlinksFrag.updateBacklinkDisplay(backlinks)
+
+        val backfrag = mAdapter.getItem(0)
+        try {
+            val inteopeiseu = backfrag as? BacklinksFragment
+            if (inteopeiseu != null) {
+                inteopeiseu.updateBacklinkDisplay(backlinks)
+            } else {
+                Log.d("MainActivity", "findFragmentByTag returned null")
+            }
+        } catch (cce: ClassCastException) {
+            Log.d("MainActivity", "could not cast caught fragment to BacklinksFragment")
         }
     }
 
     private fun setArticles(articles: List<Article>) {
-        val backlinksFrag = fragmentManager.findFragmentById(R.id.backlink_replaced_fragment) as? BacklinksFragment
-        if (backlinksFrag != null) {
-            backlinksFrag.updateArticlesDisplay(articles)
+
+        val backfrag = mAdapter.getItem(0)
+        try {
+            val inteopeiseu = backfrag as? BacklinksFragment
+            if (inteopeiseu != null) {
+                launch(UI) {
+                    delay(500) // wait half a second
+                    inteopeiseu.updateArticlesDisplay(articles)
+                }
+            } else {
+                Log.d("MainActivity", "findFragmentByTag returned null")
+            }
+        } catch (cce: ClassCastException) {
+            Log.d("MainActivity", "could not cast caught fragment to BacklinksFragment")
         }
     }
 
     override fun selectArticle (article: Article) {
         mViewModel.articleSelected(article)
+    }
+
+    override fun whichArticleInFocus(): Article {
+        if (mViewModel.mSelectedArticle.hasValue())
+            return mViewModel.mSelectedArticle.value
+        else
+            return Article(-1, "mViewModel has no value yet")
     }
 
     override fun onResume() {

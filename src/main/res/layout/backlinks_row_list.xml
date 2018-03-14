@@ -24,13 +24,13 @@
                 android:id="@+id/row1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{backlinkViewModel.title}"
+                android:text="¿Qué?"
                 android:textStyle="bold"
                 />
             <TextView
                 android:id="@+id/row2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{backlinkViewModel.pageid}"/>
+                android:text="Quoi ?"/>
         </LinearLayout>
     </RelativeLayout>

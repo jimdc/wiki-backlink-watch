@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/wikicode_fragment">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnBeforeInstance"
+        android:background="#d6d8d9"
+        android:id="@+id/nestedview">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="512"
+                android:text="Some content"/>
+            <android.support.v4.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:background="#d6d8d9">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Other content"
+                    android:maxLines="512"/>
+            </android.support.v4.widget.NestedScrollView>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <ImageButton
+        android:id="@+id/btnBeforeInstance"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="44dp"
+        android:layout_marginStart="25dp"
+        android:background="@drawable/ic_navigate_before" />
+
+    <ImageButton
+        android:id="@+id/btnNextInstance"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/btnBeforeInstance"
+        android:layout_marginEnd="35dp"
+        android:background="@drawable/ic_navigate_next" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/btnNextInstance"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="28dp"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/articleEditing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/btnBeforeInstance"
+        android:layout_alignTop="@+id/progressBar"
+        android:text="Default" />
+
+</RelativeLayout>

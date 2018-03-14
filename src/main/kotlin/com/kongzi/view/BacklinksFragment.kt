@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.support.v7.widget.LinearLayoutManager
 import com.kongzi.R
 import android.content.Context
+import android.util.Log
 import android.widget.AdapterView
 import android.widget.Spinner
 import com.kongzi.model.Article
@@ -22,8 +23,11 @@ public class BacklinksFragment : Fragment() {
     private var mArticlesSpinner: Spinner? = null
     private var mArticleSpinnerAdapter: ArticleSpinnerAdapter? = null
 
+    //Should bundle this up in onSaveInstanceState so we don't have to query it many times
+    private var mArticles: MutableList<Article> = emptyList<Article>().toMutableList()
+
     protected lateinit var mRecyclerView: RecyclerView
-    public lateinit var mRVAdapter: BacklinkAdapter
+    public lateinit var mRVAdapter: BacklinksAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,35 +50,44 @@ public class BacklinksFragment : Fragment() {
     }
 
     public fun updateArticlesDisplay(articles: List<Article>) {
-        mArticleSpinnerAdapter = ArticleSpinnerAdapter(this.context, R.layout.article_item, articles)
-        mArticlesSpinner?.setAdapter(mArticleSpinnerAdapter)
+        if (mArticleSpinnerAdapter != null) {
+            mArticles.clear()
+            mArticles.addAll(articles)
+            mArticleSpinnerAdapter?.notifyDataSetChanged()
+        } else {
+            Log.d("BacklinksFragment", "mArticleSpinnerAdapter is null.")
+        }
     }
 
     public fun updateBacklinkDisplay(backlinks: List<Backlink>) {
         mRVAdapter.refresh(backlinks)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater?.inflate(R.layout.backlinks_frag, container, false)
+    }
 
-        if (savedInstanceState == null) {
-            var rootView = inflater?.inflate(R.layout.recycler_view_frag, container, false)
-
-            mArticlesSpinner = rootView?.findViewById(R.id.articles) as Spinner
-            mArticlesSpinner?.onItemSelectedListener = ItamSelectedListener
-
-            mRVAdapter = BacklinkAdapter(mDataset)
-            mRecyclerView = rootView!!.findViewById<RecyclerView>(R.id.recyclerView).apply {
-                setHasFixedSize(true)
-                adapter = mRVAdapter
-                layoutManager = LinearLayoutManager(activity)
-                scrollToPosition(0)
-            }
-
-            return rootView
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        mRVAdapter = BacklinksAdapter(mDataset)
+        mRecyclerView = view!!.findViewById<RecyclerView>(R.id.recyclerView).apply {
+            setHasFixedSize(true)
+            adapter = mRVAdapter
+            layoutManager = LinearLayoutManager(activity)
+            scrollToPosition(0)
         }
 
-        return super.onCreateView(inflater, container, savedInstanceState)
+        mArticlesSpinner = view?.findViewById(R.id.articles) as Spinner
+        if (mArticlesSpinner == null) Log.d("BacklinksAdapter", "Could not create mArticlesSpinner")
+        else {
+            mArticleSpinnerAdapter = ArticleSpinnerAdapter(this.activity, R.layout.article_item, mArticles)
+            if (mArticleSpinnerAdapter == null) Log.d("BacklinksAdapter", "Could not create mArticleSpinnerAdapter")
+            else {
+                Log.v("BacklinksFragment", "Just created mArticeSpinnerAdapter, so it should not be null from now on...")
+                mArticlesSpinner?.adapter = mArticleSpinnerAdapter
+            }
+
+            mArticlesSpinner?.onItemSelectedListener = ItamSelectedListener
+        }
     }
 
     val ItamSelectedListener = object : AdapterView.OnItemSelectedListener {
