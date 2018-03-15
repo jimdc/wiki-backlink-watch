@@ -17,17 +17,17 @@ import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
 
 public class BacklinksFragment : Fragment() {
 
-    var mDataset: MutableList<Backlink> = ArrayList()
-    var mCallback: IFragmentToActivity? = null
+    private var dataSet: MutableList<Backlink> = ArrayList()
+    var callback: FragmentToActivity? = null
 
-    private var mArticlesSpinner: Spinner? = null
-    private var mArticleSpinnerAdapter: ArticleSpinnerAdapter? = null
+    private var articleSpinner: Spinner? = null
+    private var articleSpinnerAdapter: ArticleSpinnerAdapter? = null
 
     //Should bundle this up in onSaveInstanceState so we don't have to query it many times
-    private var mArticles: MutableList<Article> = emptyList<Article>().toMutableList()
+    private var articles: MutableList<Article> = emptyList<Article>().toMutableList()
 
-    protected lateinit var mRecyclerView: RecyclerView
-    public lateinit var mRVAdapter: BacklinksAdapter
+    protected lateinit var recyclerView: RecyclerView
+    public lateinit var recyclerViewAdapter: BacklinksAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,30 +37,30 @@ public class BacklinksFragment : Fragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         try {
-            mCallback = this.activity as IFragmentToActivity
+            callback = this.activity as FragmentToActivity
         } catch (cce: ClassCastException) {
             throw ClassCastException(activity.toString() +
-                    " must implement IFragmentToActivity")
+                    " must implement FragmentToActivity")
         }
     }
 
     override fun onDetach() {
-        mCallback = null
+        callback = null
         super.onDetach()
     }
 
     public fun updateArticlesDisplay(articles: List<Article>) {
-        if (mArticleSpinnerAdapter != null) {
-            mArticles.clear()
-            mArticles.addAll(articles)
-            mArticleSpinnerAdapter?.notifyDataSetChanged()
+        if (articleSpinnerAdapter != null) {
+            this.articles.clear()
+            this.articles.addAll(articles)
+            articleSpinnerAdapter?.notifyDataSetChanged()
         } else {
-            Log.d("BacklinksFragment", "mArticleSpinnerAdapter is null.")
+            Log.d("BacklinksFragment", "articleSpinnerAdapter is null.")
         }
     }
 
     public fun updateBacklinkDisplay(backlinks: List<Backlink>) {
-        mRVAdapter.refresh(backlinks)
+        recyclerViewAdapter.refresh(backlinks)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -68,42 +68,47 @@ public class BacklinksFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        mRVAdapter = BacklinksAdapter(mDataset)
-        mRecyclerView = view!!.findViewById<RecyclerView>(R.id.recyclerView).apply {
+        recyclerViewAdapter = BacklinksAdapter(dataSet)
+        recyclerView = view!!.findViewById<RecyclerView>(R.id.recyclerView).apply {
             setHasFixedSize(true)
-            adapter = mRVAdapter
+            adapter = recyclerViewAdapter
             layoutManager = LinearLayoutManager(activity)
             scrollToPosition(0)
         }
 
-        mArticlesSpinner = view?.findViewById(R.id.articles) as Spinner
-        if (mArticlesSpinner == null) Log.d("BacklinksAdapter", "Could not create mArticlesSpinner")
+        articleSpinner = view?.findViewById(R.id.articles) as Spinner
+        if (articleSpinner == null) Log.d("BacklinksAdapter", "Could not create articleSpinner")
         else {
-            mArticleSpinnerAdapter = ArticleSpinnerAdapter(this.activity, R.layout.article_item, mArticles)
-            if (mArticleSpinnerAdapter == null) Log.d("BacklinksAdapter", "Could not create mArticleSpinnerAdapter")
+            articleSpinnerAdapter = ArticleSpinnerAdapter(this.activity, R.layout.article_item, articles)
+            if (articleSpinnerAdapter == null) Log.d("BacklinksAdapter", "Could not create articleSpinnerAdapter")
             else {
                 Log.v("BacklinksFragment", "Just created mArticeSpinnerAdapter, so it should not be null from now on...")
-                mArticlesSpinner?.adapter = mArticleSpinnerAdapter
+                articleSpinner?.adapter = articleSpinnerAdapter
             }
 
-            mArticlesSpinner?.onItemSelectedListener = ItamSelectedListener
+            articleSpinner?.onItemSelectedListener = itemSelectedListener
         }
     }
 
-    val ItamSelectedListener = object : AdapterView.OnItemSelectedListener {
+    private val itemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(p0: AdapterView<*>?) {
             //Nothing to do here, but required to implement
         }
 
         override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-            val articleSelected = mArticleSpinnerAdapter?.getItem(position)
+            val articleSelected = articleSpinnerAdapter?.getItem(position)
             if (articleSelected != null) {
-                mCallback?.selectArticle(articleSelected)
+                callback?.selectArticle(articleSelected)
             }
         }
     }
 
     private fun initDataset() {
-        mDataset.add(Backlink(0, 0, "Hello"))
+        dataSet.add(Backlink(0, 0, "Hello"))
+
+        //Sets the UI but, on network error:
+        // OnErrorNotImplementedException: Unable to resolve host "en.wikipedia.org": No address associated with hostname
+        // can implement interface https://stackoverflow.com/questions/33548608/prevent-onerrornotimplementedexception
+        //callback?.selectArticle(Article(666, "Donald_Trump"))
     }
 }

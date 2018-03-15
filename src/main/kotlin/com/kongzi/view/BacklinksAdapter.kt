@@ -32,7 +32,7 @@ public class BacklinksAdapter(var blinks: List<Backlink>) : RecyclerView.Adapter
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BacklinksAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : BacklinksAdapter.ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.backlinks_row_list, parent, false))
     }
 

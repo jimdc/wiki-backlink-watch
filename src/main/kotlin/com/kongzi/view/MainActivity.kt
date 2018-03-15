@@ -2,7 +2,6 @@ package com.kongzi.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Contacts
 import com.kongzi.*
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -17,16 +16,12 @@ import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
 import android.support.v4.view.ViewPager
 import android.support.design.widget.TabLayout
 import android.util.Log
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
 
-class MainActivity : IFragmentToActivity, AppCompatActivity() {
+class MainActivity : FragmentToActivity, AppCompatActivity() {
 
-    private lateinit var mCompositeDisposable: CompositeDisposable
-    private var mViewModel: MainViewModel = MainViewModel(DataModel())
-    private lateinit var mAdapter: ViewPagerAdapter
+    private lateinit var compositeDisposable: CompositeDisposable
+    private var mainViewModel: MainViewModel = MainViewModel(DataModel())
+    private lateinit var viewPagerAdapter: ViewPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,13 +36,12 @@ class MainActivity : IFragmentToActivity, AppCompatActivity() {
         val toolbar = findViewById(R.id.cooltoolbar) as? android.support.v7.widget.Toolbar
         setSupportActionBar(toolbar)
 
-        val mViewPager = findViewById<View>(R.id.viewpager) as ViewPager
-        mAdapter = ViewPagerAdapter(supportFragmentManager)
-        mViewPager.adapter = mAdapter
+        val viewPager = findViewById<View>(R.id.viewpager) as ViewPager
+        viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
+        viewPager.adapter = viewPagerAdapter
 
         val tabLayout = findViewById<TabLayout>(R.id.tabs)
-        tabLayout.setupWithViewPager(mViewPager)
-
+        tabLayout.setupWithViewPager(viewPager)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -67,11 +61,11 @@ class MainActivity : IFragmentToActivity, AppCompatActivity() {
 
     private fun setBacklinks(backlinks: List<Backlink>) {
 
-        val backfrag = mAdapter.getItem(0)
+        val backlinksFragment = viewPagerAdapter.getItem(0)
         try {
-            val inteopeiseu = backfrag as? BacklinksFragment
-            if (inteopeiseu != null) {
-                inteopeiseu.updateBacklinkDisplay(backlinks)
+            val interfaceToBacklinks = backlinksFragment as? BacklinksFragment
+            if (interfaceToBacklinks != null) {
+                interfaceToBacklinks.updateBacklinkDisplay(backlinks)
             } else {
                 Log.d("MainActivity", "findFragmentByTag returned null")
             }
@@ -82,14 +76,11 @@ class MainActivity : IFragmentToActivity, AppCompatActivity() {
 
     private fun setArticles(articles: List<Article>) {
 
-        val backfrag = mAdapter.getItem(0)
+        val backlinksFragment = viewPagerAdapter.getItem(0)
         try {
-            val inteopeiseu = backfrag as? BacklinksFragment
-            if (inteopeiseu != null) {
-                launch(UI) {
-                    delay(500) // wait half a second
-                    inteopeiseu.updateArticlesDisplay(articles)
-                }
+            val interfaceToBacklinks = backlinksFragment as? BacklinksFragment
+            if (interfaceToBacklinks != null) {
+                interfaceToBacklinks.updateArticlesDisplay(articles)
             } else {
                 Log.d("MainActivity", "findFragmentByTag returned null")
             }
@@ -99,14 +90,13 @@ class MainActivity : IFragmentToActivity, AppCompatActivity() {
     }
 
     override fun selectArticle (article: Article) {
-        mViewModel.articleSelected(article)
+        mainViewModel.articleSelected(article)
     }
 
     override fun whichArticleInFocus(): Article {
-        if (mViewModel.mSelectedArticle.hasValue())
-            return mViewModel.mSelectedArticle.value
-        else
-            return Article(-1, "mViewModel has no value yet")
+        return with (mainViewModel) {
+            if (selectedArticle.hasValue()) selectedArticle.value  else Article(-1, "mainViewModel uninitialized")
+        }
     }
 
     override fun onResume() {
@@ -115,14 +105,14 @@ class MainActivity : IFragmentToActivity, AppCompatActivity() {
     }
 
     fun bind() {
-        mCompositeDisposable = CompositeDisposable()
+        compositeDisposable = CompositeDisposable()
 
-        mCompositeDisposable.add(mViewModel.getBacklinks()
+        compositeDisposable.add(mainViewModel.getBacklinks()
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setBacklinks))
 
-        mCompositeDisposable.add(mViewModel.getCuoArticles(this.applicationContext)
+        compositeDisposable.add(mainViewModel.getCuoArticles(this.applicationContext)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setArticles))
@@ -134,6 +124,6 @@ class MainActivity : IFragmentToActivity, AppCompatActivity() {
     }
 
     fun unbind() {
-        mCompositeDisposable.clear()
+        compositeDisposable.clear()
     }
 }

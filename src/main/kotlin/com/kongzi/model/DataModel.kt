@@ -4,19 +4,15 @@ package com.kongzi.model
  * Created by james on 11/03/2018.
  */
 import android.content.Context
-import android.support.v7.preference.PreferenceManager
-import android.util.ArraySet
 import android.util.Log
 import com.kongzi.R
-import com.kongzi.wikiApiServe
 import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
 import io.reactivex.Observable
-import io.reactivex.internal.operators.observable.ObservableCache.from
-import org.intellij.lang.annotations.Language
-import java.util.*
 
 
-class DataModel : IDataModel {
+class DataModel : DataModelInterface {
+
+    private val wikiApiServe = WikiApiService.create()
 
     /**
      * Backlinks for an article are subject to change.

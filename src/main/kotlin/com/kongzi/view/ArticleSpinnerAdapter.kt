@@ -13,13 +13,13 @@ import com.kongzi.R
 import com.kongzi.model.Article
 import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
 
-class ArticleSpinnerAdapter(context: Context, resource: Int, objects: List<Article>) :ArrayAdapter<Article>(context, resource, objects) {
+class ArticleSpinnerAdapter(context: Context, resource: Int, objects: List<Article>) : ArrayAdapter<Article>(context, resource, objects) {
 
-    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup) : View {
         return getCustomView(position, convertView)
     }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup) : View {
         return getCustomView(position, convertView)
     }
 

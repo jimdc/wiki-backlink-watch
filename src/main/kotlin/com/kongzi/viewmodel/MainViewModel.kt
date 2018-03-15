@@ -3,9 +3,7 @@ package com.kongzi.viewmodel
 import android.content.Context
 import com.kongzi.model.Article
 import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
-import com.kongzi.model.IDataModel
-import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.kongzi.model.DataModelInterface
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject
@@ -13,28 +11,28 @@ import io.reactivex.subjects.BehaviorSubject
 /**
  * View model for the main activity.
  */
-public class MainViewModel (var mDataModel: IDataModel) {
+public class MainViewModel (var dataModel: DataModelInterface) {
 
-    var mSelectedArticle: BehaviorSubject<Article> = BehaviorSubject.create()
+    var selectedArticle: BehaviorSubject<Article> = BehaviorSubject.create()
 
     /**
-     * Extract titles from articles, to give to [mDataModel.getBacklinks]
+     * Extract titles from articles, to give to [dataModel.getBacklinks]
      * @return an observable of type [Backlink]
      */
     fun getBacklinks(): Observable<List<Backlink>> {
-        return mSelectedArticle.observeOn(Schedulers.computation())
+        return selectedArticle.observeOn(Schedulers.computation())
                 .map(Article::title)
-                .flatMap(mDataModel::getBacklinks)
+                .flatMap(dataModel::getBacklinks)
     }
 
     fun getCuoArticles(context: Context): Observable<List<Article>> {
-        return mDataModel.getCuoArticles(context)
+        return dataModel.getCuoArticles(context)
     }
 
     /**
-     * Called by the view to update [mSelectedArticle]
+     * Called by the view to update [selectedArticle]
      */
     fun articleSelected(article: Article) {
-        mSelectedArticle.onNext(article)
+        selectedArticle.onNext(article)
     }
 }

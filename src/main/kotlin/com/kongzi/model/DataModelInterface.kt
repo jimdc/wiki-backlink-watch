@@ -4,7 +4,7 @@ import android.content.Context
 import io.reactivex.Observable
 import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
 
-interface IDataModel {
+interface DataModelInterface {
     fun getBacklinks(ArticleTitle: String): Observable<List<Backlink>>
     fun getCuoArticles(context: Context): Observable<List<Article>>
 }
