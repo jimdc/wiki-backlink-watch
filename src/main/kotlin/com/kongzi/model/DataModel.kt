@@ -1,8 +1,5 @@
 package com.kongzi.model
 
-/**
- * Created by james on 11/03/2018.
- */
 import android.content.Context
 import android.util.Log
 import com.kongzi.R
@@ -16,10 +13,10 @@ class DataModel : DataModelInterface {
 
     /**
      * Backlinks for an article are subject to change.
-     * @param[ArticleTitle] because searches are done this way in [WikiApiService]
+     * @param[articleTitle] because searches are done this way in [WikiApiService]
      */
-    override fun getBacklinks(ArticleTitle: String): Observable<List<Backlink>> {
-        return wikiApiServe.backlinks(bltitle = ArticleTitle).map{ it -> it.query.backlinks }
+    override fun getBacklinks(articleTitle: String): Observable<List<Backlink>> {
+        return wikiApiServe.backlinks(backlinkTitle = articleTitle).map{ it -> it.query.backlinks }
     }
 
     /**

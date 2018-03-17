@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.kongzi">
-    <uses-sdk xmlns:tools="http://schemas.android.com/tools"
-        android:minSdkVersion="18" android:targetSdkVersion="26" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <application android:name="Zhengmingapp" android:theme="@style/AppTheme">
+    <application android:name="WeKorrektor" android:theme="@style/AppTheme">
 
         <activity android:name=".view.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"

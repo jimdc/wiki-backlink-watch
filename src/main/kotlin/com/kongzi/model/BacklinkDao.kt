@@ -9,10 +9,10 @@ const val blTable = "blTable1"
 @Dao
 interface BacklinkDao {
 
-    @Query("SELECT * FROM ${blTable}")
+    @Query("SELECT * FROM $blTable")
     fun getAllBacklinks(): Flowable<List<Backlink>>
 
-    @Query("SELECT * FROM ${blTable} WHERE pageid = :id")
+    @Query("SELECT * FROM $blTable WHERE pageid = :id")
     fun getBacklinkById(id: Int): Backlink
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -21,6 +21,6 @@ interface BacklinkDao {
     @Delete
     fun delete(backlink: Backlink): Int
 
-    @Query("DELETE FROM ${blTable}")
+    @Query("DELETE FROM $blTable")
     fun deleteAllBacklinks()
 }

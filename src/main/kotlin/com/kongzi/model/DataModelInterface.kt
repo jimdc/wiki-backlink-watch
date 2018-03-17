@@ -5,6 +5,6 @@ import io.reactivex.Observable
 import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
 
 interface DataModelInterface {
-    fun getBacklinks(ArticleTitle: String): Observable<List<Backlink>>
+    fun getBacklinks(articleTitle: String): Observable<List<Backlink>>
     fun getCuoArticles(context: Context): Observable<List<Article>>
 }

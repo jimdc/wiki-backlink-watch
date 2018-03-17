@@ -13,18 +13,18 @@ import android.widget.TextView
 import com.kongzi.R
 import com.kongzi.model.WikiNamespace
 
-public class BacklinksAdapter(var blinks: List<Backlink>) : RecyclerView.Adapter<BacklinksAdapter.ViewHolder>() {
+public class BacklinksAdapter(private var backlinks: List<Backlink>) : RecyclerView.Adapter<BacklinksAdapter.ViewHolder>() {
 
-    class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        var row1 = v.findViewById<TextView>(R.id.row1)
-        var row2 = v.findViewById<TextView>(R.id.row2)
-        var bEdit = v.findViewById<ImageView>(R.id.imgEditLink)
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        var row1: TextView? = view.findViewById(R.id.row1)
+        var row2: TextView? = view.findViewById(R.id.row2)
+        private var btnEdit: ImageView? = view.findViewById(R.id.imgEditLink)
         init {
-            bEdit.setOnClickListener {vv ->
-                var url = "https://en.wikipedia.org/w/index.php?title=${row1.text}&action=edit"
-                var intent = Intent(Intent.ACTION_VIEW).setData(Uri.parse(url))
-                if (intent.resolveActivity(v.context.packageManager) != null) {
-                    vv.context.startActivity(intent)
+            btnEdit?.setOnClickListener { viewFromButton ->
+                val url = "https://en.wikipedia.org/w/index.php?title=${row1?.text}&action=edit"
+                val intent = Intent(Intent.ACTION_VIEW).setData(Uri.parse(url))
+                if (intent.resolveActivity(view.context.packageManager) != null) {
+                    viewFromButton.context.startActivity(intent)
                 } else {
                     Log.d("BacklinksAdapter", "No webbrowser to open edit link!")
                 }
@@ -37,10 +37,10 @@ public class BacklinksAdapter(var blinks: List<Backlink>) : RecyclerView.Adapter
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        blinks[position].let { backlink ->
-            val namespace = WikiNamespace.values().get(backlink.ns).name
-            holder.row1.text = backlink.title
-            holder.row2.text = "Row #${position}: ${namespace} #${backlink.pageid}"
+        backlinks[position].let { backlink ->
+            val namespace = WikiNamespace.values()[backlink.ns].name
+            holder.row1?.text = backlink.title
+            holder.row2?.text = "Row #$position: $namespace #${backlink.pageid}"
         }
     }
 
@@ -48,11 +48,11 @@ public class BacklinksAdapter(var blinks: List<Backlink>) : RecyclerView.Adapter
      * @todo: something more efficient than this.
      */
     fun refresh(newItems: List<Backlink>) {
-        blinks = newItems
+        backlinks = newItems
         notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
-        return blinks.size
+        return backlinks.size
     }
 }

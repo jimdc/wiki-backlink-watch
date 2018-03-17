@@ -5,13 +5,13 @@ import com.kongzi.model.Article
 import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
 import com.kongzi.model.DataModelInterface
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.Observable;
+import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 
 /**
  * View model for the main activity.
  */
-public class MainViewModel (var dataModel: DataModelInterface) {
+class MainViewModel (private var dataModel: DataModelInterface) {
 
     var selectedArticle: BehaviorSubject<Article> = BehaviorSubject.create()
 

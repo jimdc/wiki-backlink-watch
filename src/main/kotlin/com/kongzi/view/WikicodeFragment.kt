@@ -9,9 +9,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.kongzi.R
 
-public class WikicodeFragment : Fragment() {
+class WikicodeFragment : Fragment() {
 
-    var callback: FragmentToActivity? = null
+    private var callback: FragmentToActivity? = null
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -26,9 +26,9 @@ public class WikicodeFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         if (savedInstanceState == null) {
-            var rootView = inflater?.inflate(R.layout.wikicode_fragment, container, false)
+            val rootView = inflater?.inflate(R.layout.wikicode_fragment, container, false)
 
-            var artDisplay = rootView?.findViewById<TextView>(R.id.articleEditing)
+            val artDisplay = rootView?.findViewById<TextView>(R.id.articleEditing)
             artDisplay?.text = callback?.whichArticleInFocus()?.title
 
             return rootView

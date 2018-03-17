@@ -1,7 +1,7 @@
 package com.kongzi.test
 
 import com.kongzi.BuildConfig
-import com.kongzi.view.ZhengmingActivity
+import com.kongzi.view.MainActivity
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -12,11 +12,11 @@ import org.junit.Assert.assertTrue
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class, sdk = intArrayOf(25))
+@Config(constants = BuildConfig::class, sdk = [25])
 class ZhengmingActivityTest {
 
     @Test
     fun testSomething() {
-        assertTrue(Robolectric.setupActivity(ZhengmingActivity::class.java) != null)
+        assertTrue(Robolectric.setupActivity(MainActivity::class.java) != null)
     }
 }

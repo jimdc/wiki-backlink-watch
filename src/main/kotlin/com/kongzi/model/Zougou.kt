@@ -12,8 +12,7 @@ import android.arch.persistence.room.ForeignKey.CASCADE
 
 @Entity
 data class Zougou (
-        @PrimaryKey val zPageid: Int,
+        @PrimaryKey val zPageId: Int,
         val ns: Int,
         val title: String,
-        val aPageid: Int) {
-}
+        val aPageId: Int)

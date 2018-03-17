@@ -4,11 +4,8 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
-import com.kongzi.model.Art
-import com.kongzi.model.Zougou
-import com.kongzi.model.ArtZougouJoin
 
-@Database(version=1, entities=arrayOf(Art::class, Zougou::class, ArtZougouJoin::class))
+@Database(version=1, entities= [(Art::class), (Zougou::class), (ArtZougouJoin::class)])
 /**
  * @todo: don't "allowMainThreadQueries()" or "fallbackToDestructiveMigration()"
  */
@@ -20,11 +17,11 @@ abstract class BacklinkDatabase : RoomDatabase() {
     companion object {
         private var INSTANCE: BacklinkDatabase? = null
 
-        public fun getInstance(context: Context): BacklinkDatabase? {
+        fun getInstance(context: Context): BacklinkDatabase? {
             if (INSTANCE == null) {
                 synchronized(BacklinkDatabase::class) {
                     INSTANCE = Room.databaseBuilder(context.applicationContext,
-                            BacklinkDatabase::class.java, AZtableName)
+                            BacklinkDatabase::class.java, azTableName)
                             .allowMainThreadQueries()
                             .fallbackToDestructiveMigration()
                             .build()
@@ -33,6 +30,6 @@ abstract class BacklinkDatabase : RoomDatabase() {
             return INSTANCE
         }
 
-        public fun destroyInstance() { INSTANCE = null }
+        fun destroyInstance() { INSTANCE = null }
     }
 }

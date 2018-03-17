@@ -15,7 +15,7 @@ import android.widget.Spinner
 import com.kongzi.model.Article
 import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
 
-public class BacklinksFragment : Fragment() {
+class BacklinksFragment : Fragment() {
 
     private var dataSet: MutableList<Backlink> = ArrayList()
     var callback: FragmentToActivity? = null
@@ -26,8 +26,8 @@ public class BacklinksFragment : Fragment() {
     //Should bundle this up in onSaveInstanceState so we don't have to query it many times
     private var articles: MutableList<Article> = emptyList<Article>().toMutableList()
 
-    protected lateinit var recyclerView: RecyclerView
-    public lateinit var recyclerViewAdapter: BacklinksAdapter
+    private lateinit var recyclerView: RecyclerView
+    lateinit var recyclerViewAdapter: BacklinksAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +49,7 @@ public class BacklinksFragment : Fragment() {
         super.onDetach()
     }
 
-    public fun updateArticlesDisplay(articles: List<Article>) {
+    fun updateArticlesDisplay(articles: List<Article>) {
         if (articleSpinnerAdapter != null) {
             this.articles.clear()
             this.articles.addAll(articles)
@@ -59,7 +59,7 @@ public class BacklinksFragment : Fragment() {
         }
     }
 
-    public fun updateBacklinkDisplay(backlinks: List<Backlink>) {
+    fun updateBacklinkDisplay(backlinks: List<Backlink>) {
         recyclerViewAdapter.refresh(backlinks)
     }
 
@@ -76,7 +76,7 @@ public class BacklinksFragment : Fragment() {
             scrollToPosition(0)
         }
 
-        articleSpinner = view?.findViewById(R.id.articles) as Spinner
+        articleSpinner = view.findViewById(R.id.articles) as Spinner
         if (articleSpinner == null) Log.d("BacklinksAdapter", "Could not create articleSpinner")
         else {
             articleSpinnerAdapter = ArticleSpinnerAdapter(this.activity, R.layout.article_item, articles)

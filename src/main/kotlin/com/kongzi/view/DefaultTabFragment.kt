@@ -10,7 +10,7 @@ import com.kongzi.R
 
 class DefaultTabFragment : Fragment() {
 
-    internal var position: Int = 0
+    private var position: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,17 +32,21 @@ class DefaultTabFragment : Fragment() {
     companion object {
 
         fun getInstance(position: Int): Fragment {
-            when(position) {
-                0 -> { return BacklinksFragment() }
-                1 -> { return WikicodeFragment() }
-                // 2 -> use CheckedTextView for diffs
+            return when(position) {
+                0 -> {
+                    BacklinksFragment()
+                }
+                1 -> {
+                    WikicodeFragment()
+                }
+            // 2 -> use CheckedTextView for diffs
                 else -> {
                     val bundle = Bundle()
                     bundle.putInt("pos", position)
 
                     val tabFragment = DefaultTabFragment()
                     tabFragment.arguments = bundle
-                    return tabFragment
+                    tabFragment
                 }
             }
         }

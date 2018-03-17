@@ -1,7 +1,7 @@
 package com.kongzi.model
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 
 /**
  * Basically, Article but in the context of a
@@ -10,5 +10,4 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity
 data class Art(
         @PrimaryKey val aPageid: Int,
-        var title: String) {
-}
+        var title: String)

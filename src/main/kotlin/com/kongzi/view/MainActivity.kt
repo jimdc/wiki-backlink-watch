@@ -104,7 +104,7 @@ class MainActivity : FragmentToActivity, AppCompatActivity() {
         bind()
     }
 
-    fun bind() {
+    private fun bind() {
         compositeDisposable = CompositeDisposable()
 
         compositeDisposable.add(mainViewModel.getBacklinks()
@@ -123,7 +123,7 @@ class MainActivity : FragmentToActivity, AppCompatActivity() {
         unbind()
     }
 
-    fun unbind() {
+    private fun unbind() {
         compositeDisposable.clear()
     }
 }

@@ -1,17 +1,13 @@
 package com.kongzi.view
 
-import android.databinding.adapters.TextViewBindingAdapter.setText
 import android.widget.TextView
-import android.content.Context.LAYOUT_INFLATER_SERVICE
 import android.view.LayoutInflater
 import android.view.View
-import org.intellij.lang.annotations.Language
 import android.view.ViewGroup
 import android.content.Context
 import android.widget.ArrayAdapter
 import com.kongzi.R
 import com.kongzi.model.Article
-import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
 
 class ArticleSpinnerAdapter(context: Context, resource: Int, objects: List<Article>) : ArrayAdapter<Article>(context, resource, objects) {
 
@@ -47,9 +43,9 @@ class ArticleSpinnerAdapter(context: Context, resource: Int, objects: List<Artic
         return inflater.inflate(R.layout.article_item, null)
     }
 
-    private inner class ViewHolder(private val mText: TextView) {
+    private inner class ViewHolder(private val textView: TextView) {
         fun bind(text: String) {
-            mText.text = text
+            textView.text = text
         }
     }
 }

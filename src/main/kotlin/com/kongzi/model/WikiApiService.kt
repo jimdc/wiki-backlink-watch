@@ -21,17 +21,17 @@ interface WikiApiService {
             Observable<HitModel.Result>
 
     /**
-     * Equivalent to https://en.wikipedia.org/w/api.php?action=query&format=json&list=backlinks&bltitle=China&blnamespace=0&blfilterredir=nonredirects&bllimit=50
+     * Equivalent to https://en.wikipedia.org/w/api.php?action=query&format=json&list=backlinks&backlinkTitle=China&backlinkNamespace=0&backlinkFilterRedirects=nonredirects&backlinkLimit=50
      * Default settings exclude redirects and restrict the namespace to articles only.
      */
     @GET("api.php")
     fun backlinks(@Query("action") action: String = "query",
                   @Query("format") format: String = "json",
                   @Query("list") list: String = "backlinks",
-                  @Query("bltitle") bltitle: String,
-                  @Query("blnamespace") blnamespace: Int = 0,
-                  @Query("blfilterredir") blfilterredir: String = "nonredirects",
-                  @Query("bllimit") bllimit: Int = 50):
+                  @Query("bltitle") backlinkTitle: String,
+                  @Query("blnamespace") backlinkNamespace: Int = 0,
+                  @Query("blfilterredir") backlinkFilterRedirects: String = "nonredirects",
+                  @Query("bllimit") backlinkLimit: Int = 50):
             Observable<BacklinkModel.Result>
 
     /**

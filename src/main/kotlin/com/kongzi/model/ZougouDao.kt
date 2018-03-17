@@ -7,7 +7,7 @@ import android.arch.persistence.room.Query
 import android.arch.persistence.room.Update
 
 /**
- * Not sure if I should be using [AZtableName] here.
+ * Not sure if I should be using [azTableName] here.
  * The example below used a different table for "repository":
  * https://android.jlelse.eu/android-architecture-components-room-relationships-bf473510c14a
  */
@@ -15,7 +15,7 @@ import android.arch.persistence.room.Update
 @Dao
 interface ZougouDao {
 
-    @get:Query("SELECT * FROM ${AZtableName}")
+    @get:Query("SELECT * FROM $azTableName")
     val allZougous: List<Zougou>
 
     @Insert
@@ -27,6 +27,6 @@ interface ZougouDao {
     @Delete
     fun delete(vararg zougou: Zougou)
 
-    @Query("SELECT * FROM ${AZtableName} WHERE aPageid=:aPageid")
+    @Query("SELECT * FROM $azTableName WHERE aPageId=:aPageId")
     fun findZougousForArt(aPageid: Int): List<Zougou>
 }
