@@ -1,4 +1,4 @@
-package com.kongzi.view
+package com.kongzi.viewmodel
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

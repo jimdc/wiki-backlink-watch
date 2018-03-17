@@ -1,4 +1,4 @@
-package com.kongzi.view
+package com.kongzi.viewmodel
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -13,25 +13,54 @@ import android.util.Log
 import android.widget.AdapterView
 import android.widget.Spinner
 import com.kongzi.model.Article
+import com.kongzi.model.DataModel
 import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
+import com.kongzi.view.ArticleSpinnerAdapter
+import com.kongzi.view.BacklinksAdapter
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 class BacklinksFragment : Fragment() {
 
-    private var dataSet: MutableList<Backlink> = ArrayList()
-    var callback: FragmentToActivity? = null
-
-    private var articleSpinner: Spinner? = null
-    private var articleSpinnerAdapter: ArticleSpinnerAdapter? = null
-
     //Should bundle this up in onSaveInstanceState so we don't have to query it many times
     private var articles: MutableList<Article> = emptyList<Article>().toMutableList()
+    private var dataSet: MutableList<Backlink> = ArrayList()
+
+    var callback: FragmentToActivity? = null
+    private var articleSpinner: Spinner? = null
+    private var articleSpinnerAdapter: ArticleSpinnerAdapter? = null
 
     private lateinit var recyclerView: RecyclerView
     lateinit var recyclerViewAdapter: BacklinksAdapter
 
+    private lateinit var articleSetter: Disposable
+    private lateinit var backlinkSetter: Disposable
+    private var mainViewModel: MainViewModel = MainViewModel(DataModel())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initDataset()
+        articleSetter = mainViewModel.getCuoArticles(this.context.applicationContext)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::updateArticlesDisplay)
+        backlinkSetter = mainViewModel.getBacklinks()
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::updateBacklinkDisplay)
+        initializeDefaultDataset()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        callback?.getCompositeDisposable()?.remove(articleSetter)
+        callback?.getCompositeDisposable()?.remove(backlinkSetter)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        callback?.getCompositeDisposable()?.add(articleSetter)
+        callback?.getCompositeDisposable()?.add(backlinkSetter)
     }
 
     override fun onAttach(context: Context?) {
@@ -59,8 +88,9 @@ class BacklinksFragment : Fragment() {
         }
     }
 
-    fun updateBacklinkDisplay(backlinks: List<Backlink>) {
-        recyclerViewAdapter.refresh(backlinks)
+    private fun updateBacklinkDisplay(backlinks: List<Backlink>) {
+        if (::recyclerViewAdapter.isInitialized)
+            recyclerViewAdapter.refresh(backlinks)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -103,7 +133,7 @@ class BacklinksFragment : Fragment() {
         }
     }
 
-    private fun initDataset() {
+    private fun initializeDefaultDataset() {
         dataSet.add(Backlink(0, 0, "Hello"))
 
         //Sets the UI but, on network error:

@@ -1,7 +1,7 @@
 package com.kongzi.test
 
 import com.kongzi.BuildConfig
-import com.kongzi.view.MainActivity
+import com.kongzi.viewmodel.MainActivity
 
 import org.junit.Test
 import org.junit.runner.RunWith

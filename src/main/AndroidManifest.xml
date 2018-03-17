@@ -5,7 +5,7 @@
 
     <application android:name="WeKorrektor" android:theme="@style/AppTheme">
 
-        <activity android:name=".view.MainActivity"
+        <activity android:name=".viewmodel.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
             android:label="WeKorrektor" >
@@ -15,11 +15,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.SettingsActivity" android:label="Settings"
-            android:parentActivityName=".view.MainActivity">
+        <activity android:name=".viewmodel.SettingsActivity" android:label="Settings"
+            android:parentActivityName=".viewmodel.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".view.MainActivity"/>
+                android:value=".viewmodel.MainActivity"/>
         </activity>
 
     </application>

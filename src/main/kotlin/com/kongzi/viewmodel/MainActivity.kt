@@ -1,4 +1,4 @@
-package com.kongzi.view
+package com.kongzi.viewmodel
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +8,6 @@ import android.view.Menu
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import com.kongzi.viewmodel.MainViewModel
 import android.view.View
 import com.kongzi.model.*
 import android.view.MenuItem
@@ -16,6 +15,8 @@ import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
 import android.support.v4.view.ViewPager
 import android.support.design.widget.TabLayout
 import android.util.Log
+import com.kongzi.view.ViewPagerAdapter
+import io.reactivex.disposables.Disposable
 
 class MainActivity : FragmentToActivity, AppCompatActivity() {
 
@@ -23,9 +24,17 @@ class MainActivity : FragmentToActivity, AppCompatActivity() {
     private var mainViewModel: MainViewModel = MainViewModel(DataModel())
     private lateinit var viewPagerAdapter: ViewPagerAdapter
 
+    override fun getCompositeDisposable(): CompositeDisposable {
+        return compositeDisposable
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
+
+        if (savedInstanceState == null) {
+            compositeDisposable = CompositeDisposable()
+        }
 
         /*
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
@@ -59,36 +68,6 @@ class MainActivity : FragmentToActivity, AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setBacklinks(backlinks: List<Backlink>) {
-
-        val backlinksFragment = viewPagerAdapter.getItem(0)
-        try {
-            val interfaceToBacklinks = backlinksFragment as? BacklinksFragment
-            if (interfaceToBacklinks != null) {
-                interfaceToBacklinks.updateBacklinkDisplay(backlinks)
-            } else {
-                Log.d("MainActivity", "findFragmentByTag returned null")
-            }
-        } catch (cce: ClassCastException) {
-            Log.d("MainActivity", "could not cast caught fragment to BacklinksFragment")
-        }
-    }
-
-    private fun setArticles(articles: List<Article>) {
-
-        val backlinksFragment = viewPagerAdapter.getItem(0)
-        try {
-            val interfaceToBacklinks = backlinksFragment as? BacklinksFragment
-            if (interfaceToBacklinks != null) {
-                interfaceToBacklinks.updateArticlesDisplay(articles)
-            } else {
-                Log.d("MainActivity", "findFragmentByTag returned null")
-            }
-        } catch (cce: ClassCastException) {
-            Log.d("MainActivity", "could not cast caught fragment to BacklinksFragment")
-        }
-    }
-
     override fun selectArticle (article: Article) {
         mainViewModel.articleSelected(article)
     }
@@ -97,33 +76,5 @@ class MainActivity : FragmentToActivity, AppCompatActivity() {
         return with (mainViewModel) {
             if (selectedArticle.hasValue()) selectedArticle.value  else Article(-1, "mainViewModel uninitialized")
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        bind()
-    }
-
-    private fun bind() {
-        compositeDisposable = CompositeDisposable()
-
-        compositeDisposable.add(mainViewModel.getBacklinks()
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setBacklinks))
-
-        compositeDisposable.add(mainViewModel.getCuoArticles(this.applicationContext)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setArticles))
-    }
-
-    override fun onPause() {
-        super.onPause()
-        unbind()
-    }
-
-    private fun unbind() {
-        compositeDisposable.clear()
     }
 }

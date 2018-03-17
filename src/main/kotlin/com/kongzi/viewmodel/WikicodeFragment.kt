@@ -1,4 +1,4 @@
-package com.kongzi.view
+package com.kongzi.viewmodel
 
 import android.content.Context
 import android.os.Bundle
@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.kongzi.R
+import com.kongzi.viewmodel.FragmentToActivity
 
 class WikicodeFragment : Fragment() {
 

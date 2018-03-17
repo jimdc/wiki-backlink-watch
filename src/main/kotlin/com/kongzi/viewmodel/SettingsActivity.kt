@@ -1,11 +1,9 @@
-package com.kongzi.view
+package com.kongzi.viewmodel
 
 import android.os.Bundle
-import android.preference.PreferenceActivity
-import android.preference.PreferenceFragment
-import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.PreferenceFragmentCompat
+import com.kongzi.R
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -14,6 +12,13 @@ class SettingsActivity : AppCompatActivity() {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(android.R.id.content, SettingsFragment())
         fragmentTransaction.commit()
+    }
+
+    internal class SettingsFragment : PreferenceFragmentCompat() {
+
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+            setPreferencesFromResource(R.xml.preferences, rootKey)
+        }
     }
 
 }
