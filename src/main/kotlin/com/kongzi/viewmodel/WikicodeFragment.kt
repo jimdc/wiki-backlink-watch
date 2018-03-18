@@ -17,25 +17,18 @@ class WikicodeFragment : Fragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         try {
-            callback = this.activity as FragmentToActivity
+            callback = context as FragmentToActivity
         } catch (cce: ClassCastException) {
-            throw ClassCastException(activity.toString() +
-                    " must implement FragmentToActivity")
+            throw ClassCastException("$context must implement FragmentToActivity")
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        if (savedInstanceState == null) {
-            val rootView = inflater?.inflate(R.layout.wikicode_fragment, container, false)
-
-            val artDisplay = rootView?.findViewById<TextView>(R.id.articleEditing)
-            artDisplay?.text = callback?.whichArticleInFocus()?.title
-
-            return rootView
-        }
-
-        return super.onCreateView(inflater, container, savedInstanceState)
+        val rootView = inflater?.inflate(R.layout.wikicode_fragment, container, false)
+        val artDisplay = rootView?.findViewById<TextView>(R.id.articleEditing)
+        artDisplay?.text = callback?.whichArticleInFocus()?.title
+        return rootView
     }
 
     override fun onDetach() {

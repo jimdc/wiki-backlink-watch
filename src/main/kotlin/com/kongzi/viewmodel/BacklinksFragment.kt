@@ -21,6 +21,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
+private const val TAG = "BacklinksFragment"
+
 class BacklinksFragment : Fragment() {
 
     //Should bundle this up in onSaveInstanceState so we don't have to query it many times
@@ -40,14 +42,6 @@ class BacklinksFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        articleSetter = mainViewModel.getCuoArticles(this.context.applicationContext)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::updateArticlesDisplay)
-        backlinkSetter = mainViewModel.getBacklinks()
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::updateBacklinkDisplay)
         initializeDefaultDataset()
     }
 
@@ -66,11 +60,24 @@ class BacklinksFragment : Fragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         try {
-            callback = this.activity as FragmentToActivity
+            if (context is MainActivity) {
+                Log.v(TAG, "casting context to callback")
+                callback = context
+            } else {
+                Log.d(TAG, "context is not MainActivity but rather $context")
+            }
         } catch (cce: ClassCastException) {
-            throw ClassCastException(activity.toString() +
-                    " must implement FragmentToActivity")
+            throw ClassCastException("$context must implement FragmentToActivity")
         }
+
+        articleSetter = mainViewModel.getCuoArticles(context!!)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::updateArticlesDisplay)
+        backlinkSetter = mainViewModel.getBacklinks()
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::updateBacklinkDisplay)
     }
 
     override fun onDetach() {
@@ -84,13 +91,15 @@ class BacklinksFragment : Fragment() {
             this.articles.addAll(articles)
             articleSpinnerAdapter?.notifyDataSetChanged()
         } else {
-            Log.d("BacklinksFragment", "articleSpinnerAdapter is null.")
+            Log.d(TAG, "articleSpinnerAdapter is null.")
         }
     }
 
     private fun updateBacklinkDisplay(backlinks: List<Backlink>) {
         if (::recyclerViewAdapter.isInitialized)
             recyclerViewAdapter.refresh(backlinks)
+        else
+            Log.d(TAG, "recyclerViewAdapter not initialized for updateBacklinkDisplay")
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -107,12 +116,12 @@ class BacklinksFragment : Fragment() {
         }
 
         articleSpinner = view.findViewById(R.id.articles) as Spinner
-        if (articleSpinner == null) Log.d("BacklinksAdapter", "Could not create articleSpinner")
+        if (articleSpinner == null) Log.d(TAG, "Could not create articleSpinner")
         else {
             articleSpinnerAdapter = ArticleSpinnerAdapter(this.activity, R.layout.article_item, articles)
             if (articleSpinnerAdapter == null) Log.d("BacklinksAdapter", "Could not create articleSpinnerAdapter")
             else {
-                Log.v("BacklinksFragment", "Just created mArticeSpinnerAdapter, so it should not be null from now on...")
+                Log.v(TAG, "Just created ArticeSpinnerAdapter, so it should not be null from now on...")
                 articleSpinner?.adapter = articleSpinnerAdapter
             }
 
@@ -125,7 +134,7 @@ class BacklinksFragment : Fragment() {
             //Nothing to do here, but required to implement
         }
 
-        override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+        override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
             val articleSelected = articleSpinnerAdapter?.getItem(position)
             if (articleSelected != null) {
                 callback?.selectArticle(articleSelected)
