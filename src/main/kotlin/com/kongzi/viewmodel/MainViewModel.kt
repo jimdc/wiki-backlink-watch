@@ -10,6 +10,7 @@ import io.reactivex.subjects.BehaviorSubject
 
 /**
  * View model for the main activity.
+ * @todo: extend AndroidViewModel instead of passing context as parameter
  */
 class MainViewModel (private var dataModel: DataModelInterface) {
 
