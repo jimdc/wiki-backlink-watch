@@ -1,18 +1,14 @@
 package com.kongzi.test
 
 import com.kongzi.BuildConfig
-import com.kongzi.viewmodel.BacklinksFragment
-import com.kongzi.viewmodel.MainActivity
+import com.kongzi.past.BacklinksFragment
 
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.Robolectric
 import org.robolectric.annotation.Config
 
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil.startFragment
-import android.widget.TextView
-import android.view.View
 import android.widget.Spinner
 import org.junit.Assert.*
 import com.kongzi.R

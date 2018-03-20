@@ -2,10 +2,12 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.kongzi">
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
-    <application android:name="WeKorrektor" android:theme="@style/AppTheme" android:icon="@drawable/zhengming_logo">
+    <application android:name=".WeKorrektor" android:theme="@style/AppTheme" android:icon="@drawable/zhengming_logo">
 
-        <activity android:name=".viewmodel.MainActivity"
+        <activity android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
             android:label="WeKorrektor" >
@@ -15,11 +17,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".viewmodel.SettingsActivity" android:label="Settings"
-            android:parentActivityName=".viewmodel.MainActivity">
+        <activity android:name=".past.SettingsActivity" android:label="Settings"
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".viewmodel.MainActivity"/>
+                android:value=".MainActivity"/>
         </activity>
 
     </application>

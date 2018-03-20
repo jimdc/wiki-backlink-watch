@@ -2,7 +2,7 @@ package com.kongzi.test
 
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
-import com.kongzi.viewmodel.MainActivity
+import com.kongzi.past.OldMainActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -11,7 +11,7 @@ import org.junit.runner.RunWith
 class MainActivityTest {
 
     @get:Rule
-    val activityTestRule = ActivityTestRule(MainActivity::class.java)
+    val activityTestRule = ActivityTestRule(OldMainActivity::class.java)
 
 
     @Test

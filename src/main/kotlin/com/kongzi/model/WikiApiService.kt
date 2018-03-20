@@ -21,18 +21,37 @@ interface WikiApiService {
             Observable<HitModel.Result>
 
     /**
-     * Equivalent to https://en.wikipedia.org/w/api.php?action=query&format=json&list=backlinks&backlinkTitle=China&backlinkNamespace=0&backlinkFilterRedirects=nonredirects&backlinkLimit=50
+     * Equivalent to https://en.wikipedia.org/w/api.php?action=query&format=json&list=repositories&backlinkTitle=China&backlinkNamespace=0&backlinkFilterRedirects=nonredirects&backlinkLimit=50
      * Default settings exclude redirects and restrict the namespace to articles only.
      */
     @GET("api.php")
     fun backlinks(@Query("action") action: String = "query",
                   @Query("format") format: String = "json",
-                  @Query("list") list: String = "backlinks",
+                  @Query("list") list: String = "repositories",
                   @Query("bltitle") backlinkTitle: String,
                   @Query("blnamespace") backlinkNamespace: Int = 0,
                   @Query("blfilterredir") backlinkFilterRedirects: String = "nonredirects",
                   @Query("bllimit") backlinkLimit: Int = 50):
             Observable<BacklinkModel.Result>
+
+    /**
+     * Equivalent to https://en.wikipedia.org/w/api.php?format=json&action=parse&prop=wikitext&page=San%20Francisco
+     * {"parse":
+     *   {"title":
+     *     "San Francisco","pageid":49728,"wikitext":
+     *       {"*":"{{About|the city and county in California}}
+     */
+    fun wikicode(@Query(value="action") action: String = "parse",
+                 @Query(value="format") format: String = "json",
+                 @Query(value="prop") prop: String = "wikitext",
+                 @Query(value="page") page: String):
+            Observable<WikicodeModel.Result>
+
+    object WikicodeModel {
+        data class Result(val parse: Parse)
+        data class Parse(val title: String, val pageid: Int, val wikitext: Wikitext)
+        data class Wikitext(val asterisk: String)
+    }
 
     /**
      * Hardcoded to use en.wikipedia and SSL for now.
@@ -83,7 +102,7 @@ interface WikiApiService {
      *  "continue":"-||"
      *  },
      *  "query": {
-     *  "backlinks":[
+     *  "repositories":[
      *  {"pageid":573,"ns":0,"title":"Alchemy"},
      *  {"pageid":597,"ns":0,"title":"Austroasiatic languages"},
      *  ...

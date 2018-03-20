@@ -1,39 +1,60 @@
 package com.kongzi.viewmodel
 
-import android.content.Context
-import com.kongzi.model.Article
-import com.kongzi.model.WikiApiService.BacklinkModel.Backlink
-import com.kongzi.model.DataModelInterface
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.ViewModel
+import android.databinding.ObservableField
+import android.util.Log
+import com.kongzi.BacklinkRepository
+import com.kongzi.model.Baqlink
+import com.kongzi.extensions.plusAssign
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.Observable
-import io.reactivex.subjects.BehaviorSubject
+import javax.inject.Inject
 
-/**
- * View model for the main activity.
- * @todo: extend AndroidViewModel instead of passing context as parameter
- */
-class MainViewModel (private var dataModel: DataModelInterface) {
+private const val TAG = "MainViewModel"
 
-    var selectedArticle: BehaviorSubject<Article> = BehaviorSubject.create()
+class MainViewModel @Inject constructor(var backlinkRepository: BacklinkRepository)
+    : ViewModel() {
 
-    /**
-     * Extract titles from articles, to give to [dataModel.getBacklinks]
-     * @return an observable of type [Backlink]
-     */
-    fun getBacklinks(): Observable<List<Backlink>> {
-        return selectedArticle.observeOn(Schedulers.computation())
-                .map(Article::title)
-                .flatMap(dataModel::getBacklinks)
+    val text = ObservableField("old data")
+    val isLoading = ObservableField(false)
+
+
+    var repositories = MutableLiveData<List<Baqlink>>()
+    private val compositeDisposable = CompositeDisposable()
+
+    fun loadRepositories() {
+        isLoading.set(true)
+
+        compositeDisposable += backlinkRepository
+                .getRepositories()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object: DisposableObserver<List<Baqlink>>() {
+
+            override fun onError(e: Throwable) {
+                Log.d(TAG, "onError called with ${e.localizedMessage}")
+            }
+
+            override fun onNext(data: List<Baqlink>) {
+                Log.d(TAG, "onNext called with ${data.size} list array")
+                repositories.value = data
+            }
+
+            override fun onComplete() {
+                isLoading.set(false)
+            }
+        })
     }
 
-    fun getCuoArticles(context: Context): Observable<List<Article>> {
-        return dataModel.getCuoArticles(context)
+    override fun onCleared() {
+        super.onCleared()
+        if(!compositeDisposable.isDisposed){
+            compositeDisposable.dispose()
+        }
     }
 
-    /**
-     * Called by the view to update [selectedArticle]
-     */
-    fun articleSelected(article: Article) {
-        selectedArticle.onNext(article)
-    }
+
 }
